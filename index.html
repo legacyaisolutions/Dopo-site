@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dopo — Save it for later</title>
+  <meta name="description" content="One tap to save content from Instagram, YouTube, TikTok & Facebook. AI-powered search to find it instantly. Your social media content, finally organized.">
+  <meta property="og:title" content="Dopo — Save it for later">
+  <meta property="og:description" content="One tap to save. AI-powered search to find it. Your social media content, finally organized.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dopoapp.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0A0A0F;
+      --bg-card: #12121A;
+      --bg-elevated: #1A1A25;
+      --text: #F0EDE8;
+      --text-muted: #8A8A99;
+      --coral: #FF6B6B;
+      --coral-glow: #FF6B6B40;
+      --peach: #FFAB91;
+      --lavender: #B8A9FF;
+      --mint: #7EDCB5;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== AMBIENT BACKGROUND ===== */
+    .ambient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .ambient::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      top: -200px; right: -100px;
+      background: radial-gradient(circle, var(--coral-glow) 0%, transparent 70%);
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .ambient::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      bottom: 20%; left: -150px;
+      background: radial-gradient(circle, #B8A9FF20 0%, transparent 70%);
+      animation: drift 25s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(80px, 60px) scale(1.15); }
+    }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ===== NAV ===== */
+    nav {
+      padding: 20px 0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 700; font-size: 28px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--coral), var(--peach));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-cta {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px; font-weight: 500;
+      color: var(--text);
+      background: var(--bg-elevated);
+      border: 1px solid #2A2A38;
+      padding: 10px 24px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .nav-cta:hover { border-color: var(--coral); color: var(--coral); }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg-elevated);
+      border: 1px solid #2A2A38;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-badge .dot {
+      width: 8px; height: 8px;
+      background: var(--mint);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--coral), var(--peach));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(17px, 2.2vw, 21px);
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      font-weight: 300;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== WAITLIST FORM ===== */
+    .waitlist-form {
+      display: flex; gap: 12px;
+      max-width: 480px; margin: 0 auto;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .waitlist-form input {
+      flex: 1;
+      padding: 16px 22px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      background: var(--bg-elevated);
+      border: 1px solid #2A2A38;
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .waitlist-form input::placeholder { color: var(--text-muted); }
+    .waitlist-form input:focus { border-color: var(--coral); }
+    .waitlist-form button {
+      padding: 16px 32px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px; font-weight: 600;
+      background: linear-gradient(135deg, var(--coral), #FF8A65);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .waitlist-form button:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--coral-glow); }
+    .waitlist-form button:active { transform: translateY(0); }
+    .waitlist-form button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .form-message {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      min-height: 24px;
+      animation: fadeUp 0.4s ease both;
+    }
+    .form-message.success { color: var(--mint); }
+    .form-message.error { color: var(--coral); }
+
+    /* ===== SOCIAL PROOF ===== */
+    .social-proof {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      margin-top: 40px;
+      font-size: 14px; color: var(--text-muted);
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .avatar-stack {
+      display: flex;
+    }
+    .avatar-stack span {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      margin-left: -8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .avatar-stack span:first-child { margin-left: 0; }
+    .avatar-stack span:nth-child(1) { background: #FF6B6B30; }
+    .avatar-stack span:nth-child(2) { background: #B8A9FF30; }
+    .avatar-stack span:nth-child(3) { background: #7EDCB530; }
+
+    /* ===== PAIN STATEMENT ===== */
+    .pain-statement {
+      padding: 80px 0;
+      text-align: center;
+      border-top: 1px solid #1A1A25;
+      border-bottom: 1px solid #1A1A25;
+    }
+    .pain-line {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(22px, 3.5vw, 34px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .pain-answer {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--text);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-weight: 400;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-section {
+      padding: 80px 0;
+    }
+    .section-label {
+      font-size: 13px; font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--coral);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 60px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .step {
+      background: var(--bg-card);
+      border: 1px solid #1E1E2A;
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      position: relative;
+      transition: all 0.4s ease;
+    }
+    .step:hover {
+      border-color: #2A2A3A;
+      transform: translateY(-4px);
+    }
+    .step-number {
+      font-family: 'Fraunces', serif;
+      font-size: 48px; font-weight: 700;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .step:nth-child(1) .step-number { color: var(--coral); }
+    .step:nth-child(2) .step-number { color: var(--lavender); }
+    .step:nth-child(3) .step-number { color: var(--mint); }
+    .step h3 {
+      font-size: 20px; font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .step p {
+      font-size: 15px; color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ===== PLATFORMS ===== */
+    .platforms-section {
+      padding: 60px 0 80px;
+      text-align: center;
+    }
+    .platform-grid {
+      display: flex; justify-content: center; gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .platform-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid #1E1E2A;
+      border-radius: 100px;
+      padding: 14px 28px;
+      font-size: 15px; font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .platform-chip:hover { border-color: #3A3A4A; transform: translateY(-2px); }
+    .platform-chip svg { width: 22px; height: 22px; }
+    .platform-chip.coming { opacity: 0.45; }
+    .platform-chip.coming::after {
+      content: 'Soon';
+      font-size: 11px; font-weight: 600;
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-left: 4px;
+    }
+
+    /* ===== FEATURES ===== */
+    .features-section {
+      padding: 80px 0;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid #1E1E2A;
+      border-radius: var(--radius);
+      padding: 36px;
+      transition: all 0.4s ease;
+    }
+    .feature-card:hover { border-color: #2A2A3A; }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .feature-card:nth-child(1) .feature-icon { background: #FF6B6B18; }
+    .feature-card:nth-child(2) .feature-icon { background: #B8A9FF18; }
+    .feature-card:nth-child(3) .feature-icon { background: #7EDCB518; }
+    .feature-card:nth-child(4) .feature-icon { background: #FFAB9118; }
+    .feature-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+    .feature-card p { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+
+    /* ===== BOTTOM CTA ===== */
+    .bottom-cta {
+      padding: 100px 0;
+      text-align: center;
+    }
+    .bottom-cta h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+    .bottom-cta p {
+      font-size: 17px; color: var(--text-muted);
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid #1A1A25;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 700; font-size: 20px;
+      color: var(--text-muted);
+    }
+    footer small { color: var(--text-muted); font-size: 13px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero { padding: 60px 0 60px; }
+      .steps { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .waitlist-form { flex-direction: column; }
+      .waitlist-form button { width: 100%; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+      .platform-grid { gap: 12px; }
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== GRAIN OVERLAY ===== */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      z-index: 9999; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.025;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient"></div>
+
+  <div class="container">
+    <!-- NAV -->
+    <nav>
+      <div class="logo">dopo</div>
+      <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Coming to iOS
+      </div>
+      <h1>Save it now.<br><span class="accent">Find it later.</span></h1>
+      <p class="hero-sub">
+        One tap to save content from Instagram, YouTube, TikTok & Facebook.
+        AI-powered search to find it instantly.
+      </p>
+
+      <div id="waitlist">
+        <form class="waitlist-form" id="waitlistForm">
+          <input type="email" id="emailInput" placeholder="Enter your email" required autocomplete="email">
+          <button type="submit" id="submitBtn">Join Waitlist</button>
+        </form>
+        <div class="form-message" id="formMessage"></div>
+      </div>
+
+      <div class="social-proof">
+        <div class="avatar-stack">
+          <span>🎬</span>
+          <span>📸</span>
+          <span>🎵</span>
+        </div>
+        <span>Join early adopters getting first access</span>
+      </div>
+    </section>
+
+    <!-- PAIN POINT STATEMENT -->
+    <section class="pain-statement reveal">
+      <div class="pain-line">"I saw it somewhere…<br>was it Instagram? TikTok? YouTube?"</div>
+      <div class="pain-answer">Sound familiar? You save content everywhere and find it nowhere.<br>Dopo puts everything in one place — and actually helps you find it again.</div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section reveal">
+      <div class="section-label">How it works</div>
+      <div class="section-title">Three steps. Zero friction.</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>See something you love</h3>
+          <p>Scrolling Instagram, watching YouTube, browsing TikTok — you find content worth keeping.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Tap Share → Dopo</h3>
+          <p>Hit the share button, tap Dopo. Done in under 2 seconds. AI automatically tags and organizes it.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Search & find instantly</h3>
+          <p>"That pasta recipe from last week" — just type what you remember. AI finds it for you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORMS -->
+    <section class="platforms-section reveal">
+      <div class="section-label">Works with</div>
+      <div class="section-title">Your favorite platforms, unified.</div>
+      <div class="platform-grid">
+        <div class="platform-chip">
+          <svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F58529"/><stop offset="50%" stop-color="#DD2A7B"/><stop offset="100%" stop-color="#8134AF"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig)" stroke-width="2"/><circle cx="18" cy="6" r="1.5" fill="#DD2A7B"/></svg>
+          Instagram
+        </div>
+        <div class="platform-chip">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 4-8 4z" fill="#FF0000"/></svg>
+          YouTube
+        </div>
+        <div class="platform-chip coming">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12.525.02c1.31-.02 2.61.01 3.91.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" fill="#69C9D0"/></svg>
+          TikTok
+        </div>
+        <div class="platform-chip coming">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/></svg>
+          Facebook
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features-section reveal">
+      <div class="section-label">Why Dopo</div>
+      <div class="section-title">Not another bookmarking app.</div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>AI-Powered Metadata</h3>
+          <p>Every save is automatically tagged with title, creator, description, and smart tags. You save the link — AI does the rest.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Natural Language Search</h3>
+          <p>Search the way you think. "That workout video from the guy with the beard" actually works.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>2-Second Save</h3>
+          <p>Share sheet integration means saving is faster than switching apps. Tap share, tap Dopo, done.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏠</div>
+          <h3>One Library, Every Platform</h3>
+          <p>No more digging through Instagram saved, YouTube Watch Later, and TikTok favorites separately.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM CTA -->
+    <section class="bottom-cta reveal">
+      <h2>Stop losing content<br>you'll want <span class="accent">later.</span></h2>
+      <p>Dopo is launching soon on iOS. Get early access.</p>
+      <form class="waitlist-form" id="waitlistForm2">
+        <input type="email" id="emailInput2" placeholder="Enter your email" required autocomplete="email">
+        <button type="submit" id="submitBtn2">Join Waitlist</button>
+      </form>
+      <div class="form-message" id="formMessage2"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-logo">dopo</div>
+      <small>&copy; 2026 Dopo. All rights reserved.</small>
+    </footer>
+  </div>
+
+  <script>
+    // ===== SUPABASE CONFIG =====
+    const SUPABASE_URL = 'https://adyqktvkxwohzxzjqpjt.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkeXFrdHZreHdvaHp4empxcGp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDY1OTcsImV4cCI6MjA4NjQ4MjU5N30.H5V7HHpIl5o5steAc760Lm1SqjmAYnWiBNrTlrmQHiI';
+
+    async function submitEmail(email, formMsg, btn) {
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+      formMsg.className = 'form-message';
+      formMsg.textContent = '';
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email.toLowerCase().trim() })
+        });
+
+        if (res.ok) {
+          formMsg.className = 'form-message success';
+          formMsg.textContent = "You're in! We'll notify you when Dopo launches. 🎉";
+          btn.textContent = 'Joined ✓';
+        } else if (res.status === 409) {
+          formMsg.className = 'form-message success';
+          formMsg.textContent = "You're already on the list! We'll be in touch soon.";
+          btn.textContent = 'Join Waitlist';
+          btn.disabled = false;
+        } else {
+          throw new Error('Request failed');
+        }
+      } catch (err) {
+        formMsg.className = 'form-message error';
+        formMsg.textContent = 'Something went wrong. Please try again.';
+        btn.textContent = 'Join Waitlist';
+        btn.disabled = false;
+      }
+    }
+
+    // Top form
+    document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      submitEmail(email, document.getElementById('formMessage'), document.getElementById('submitBtn'));
+    });
+
+    // Bottom form
+    document.getElementById('waitlistForm2').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailInput2').value;
+      submitEmail(email, document.getElementById('formMessage2'), document.getElementById('submitBtn2'));
+    });
+
+    // ===== SCROLL REVEAL =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
