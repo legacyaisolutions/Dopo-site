@@ -155,11 +155,12 @@
     /* ===== WAITLIST FORM ===== */
     .waitlist-form {
       display: flex; gap: 12px;
-      max-width: 480px; margin: 0 auto;
+      max-width: 600px; margin: 0 auto;
       animation: fadeUp 0.8s 0.3s ease both;
     }
     .waitlist-form input {
       flex: 1;
+      min-width: 0;
       padding: 16px 22px;
       font-family: 'Outfit', sans-serif;
       font-size: 16px;
@@ -170,6 +171,8 @@
       outline: none;
       transition: border-color 0.3s;
     }
+    .waitlist-form input[type="text"] { flex: 0.7; }
+    .waitlist-form input[type="email"] { flex: 1; }
     .waitlist-form input::placeholder { color: var(--text-muted); }
     .waitlist-form input:focus { border-color: var(--coral); }
     .waitlist-form button {
@@ -452,6 +455,7 @@
 
       <div id="waitlist">
         <form class="waitlist-form" id="waitlistForm">
+          <input type="text" id="nameInput" placeholder="Your name (optional)" autocomplete="given-name">
           <input type="email" id="emailInput" placeholder="Enter your email" required autocomplete="email">
           <button type="submit" id="submitBtn">Join Waitlist</button>
         </form>
@@ -554,6 +558,7 @@
       <h2>Stop losing content<br>you'll want <span class="accent">later.</span></h2>
       <p>Dopo is launching soon on iOS. Get early access.</p>
       <form class="waitlist-form" id="waitlistForm2">
+        <input type="text" id="nameInput2" placeholder="Your name (optional)" autocomplete="given-name">
         <input type="email" id="emailInput2" placeholder="Enter your email" required autocomplete="email">
         <button type="submit" id="submitBtn2">Join Waitlist</button>
       </form>
@@ -572,11 +577,14 @@
     const SUPABASE_URL = 'https://adyqktvkxwohzxzjqpjt.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkeXFrdHZreHdvaHp4empxcGp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDY1OTcsImV4cCI6MjA4NjQ4MjU5N30.H5V7HHpIl5o5steAc760Lm1SqjmAYnWiBNrTlrmQHiI';
 
-    async function submitEmail(email, formMsg, btn) {
+    async function submitEmail(name, email, formMsg, btn) {
       btn.disabled = true;
       btn.textContent = 'Joining...';
       formMsg.className = 'form-message';
       formMsg.textContent = '';
+
+      const payload = { email: email.toLowerCase().trim() };
+      if (name && name.trim()) payload.name = name.trim();
 
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
@@ -587,7 +595,7 @@
             'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Prefer': 'return=minimal'
           },
-          body: JSON.stringify({ email: email.toLowerCase().trim() })
+          body: JSON.stringify(payload)
         });
 
         if (res.ok) {
@@ -613,15 +621,17 @@
     // Top form
     document.getElementById('waitlistForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      const name = document.getElementById('nameInput').value;
       const email = document.getElementById('emailInput').value;
-      submitEmail(email, document.getElementById('formMessage'), document.getElementById('submitBtn'));
+      submitEmail(name, email, document.getElementById('formMessage'), document.getElementById('submitBtn'));
     });
 
     // Bottom form
     document.getElementById('waitlistForm2').addEventListener('submit', function(e) {
       e.preventDefault();
+      const name = document.getElementById('nameInput2').value;
       const email = document.getElementById('emailInput2').value;
-      submitEmail(email, document.getElementById('formMessage2'), document.getElementById('submitBtn2'));
+      submitEmail(name, email, document.getElementById('formMessage2'), document.getElementById('submitBtn2'));
     });
 
     // ===== SCROLL REVEAL =====
