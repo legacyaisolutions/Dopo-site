@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dopo — Save it for later</title>
-  <meta name="description" content="One tap to save content from Instagram, YouTube, TikTok, Facebook & X. AI-powered search to find it instantly. Your social media content, finally organized.">
-  <meta property="og:title" content="Dopo — Save it for later">
-  <meta property="og:description" content="One tap to save. AI-powered search to find it. Your social media content, finally organized.">
+  <title>Dopo — Curate what you love. Discover what your people save.</title>
+  <meta name="description" content="Save content from Instagram, TikTok, YouTube, X & Facebook in one tap. Build collections. Share your taste. Discover what the best curators are saving.">
+  <meta property="og:title" content="Dopo — Curate what you love. Discover what your people save.">
+  <meta property="og:description" content="Save content from any platform. Build collections. Share your taste. Discover what the best curators are finding.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dopoapp.com">
   <meta name="twitter:card" content="summary_large_image">
@@ -20,13 +20,19 @@
       --bg: #0A0A0F;
       --bg-card: #12121A;
       --bg-elevated: #1A1A25;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-glow: rgba(255,107,107,0.3);
       --text: #F0EDE8;
-      --text-muted: #8A8A99;
+      --text-secondary: #9B97A8;
+      --text-muted: #5E5A6E;
       --coral: #FF6B6B;
-      --coral-glow: #FF6B6B40;
+      --coral-glow: rgba(255,107,107,0.25);
       --peach: #FFAB91;
-      --lavender: #B8A9FF;
       --mint: #7EDCB5;
+      --lavender: #B8A9FF;
+      --gradient-main: linear-gradient(135deg, #FF6B6B, #FFAB91);
+      --gradient-cool: linear-gradient(135deg, #7EDCB5, #B8A9FF);
+      --gradient-warm: linear-gradient(135deg, #FFAB91, #FFD97D);
       --radius: 16px;
       --radius-sm: 10px;
     }
@@ -42,7 +48,9 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== AMBIENT BACKGROUND ===== */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ===== AMBIENT EFFECTS ===== */
     .ambient {
       position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
     }
@@ -59,7 +67,7 @@
       position: absolute;
       width: 500px; height: 500px;
       bottom: 20%; left: -150px;
-      background: radial-gradient(circle, #B8A9FF20 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(184,169,255,0.12) 0%, transparent 70%);
       animation: drift 25s ease-in-out infinite alternate-reverse;
     }
     @keyframes drift {
@@ -67,367 +75,341 @@
       100% { transform: translate(80px, 60px) scale(1.15); }
     }
 
-    /* ===== LAYOUT ===== */
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    /* ===== GRAIN OVERLAY ===== */
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.025;
+    }
+
+    /* ===== SVG ICON HELPERS ===== */
+    .icon-svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .icon-svg-lg { width: 24px; height: 24px; flex-shrink: 0; }
 
     /* ===== NAV ===== */
     nav {
-      padding: 20px 0;
+      position: relative; z-index: 10;
       display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 0;
     }
     .logo {
       font-family: 'Fraunces', serif;
-      font-weight: 700; font-size: 28px;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--coral), var(--peach));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-weight: 700; font-size: 28px; letter-spacing: -0.5px;
+      background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .nav-cta {
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px; font-weight: 500;
-      color: var(--text);
-      background: var(--bg-elevated);
-      border: 1px solid #2A2A38;
-      padding: 10px 24px;
-      border-radius: 100px;
-      text-decoration: none;
+      font-size: 14px; font-weight: 600; color: var(--text);
+      background: var(--coral); padding: 10px 24px;
+      border-radius: 100px; text-decoration: none;
       transition: all 0.3s ease;
-      cursor: pointer;
     }
-    .nav-cta:hover { border-color: var(--coral); color: var(--coral); }
+    .nav-cta:hover { background: #ff8585; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(255,107,107,0.3); }
 
     /* ===== HERO ===== */
     .hero {
-      padding: 100px 0 80px;
-      text-align: center;
+      position: relative; z-index: 1;
+      padding: 80px 0 60px; text-align: center;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: var(--bg-elevated);
-      border: 1px solid #2A2A38;
-      padding: 8px 20px;
-      border-radius: 100px;
-      font-size: 13px; font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-      animation: fadeUp 0.8s ease both;
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      border-radius: 100px; padding: 8px 20px; font-size: 13px;
+      color: var(--text-secondary); margin-bottom: 32px;
     }
     .hero-badge .dot {
-      width: 8px; height: 8px;
-      background: var(--mint);
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--mint); animation: pulse 2s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .hero h1 {
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    h1 {
       font-family: 'Fraunces', serif;
-      font-size: clamp(42px, 7vw, 80px);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -2px;
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 1.05; font-weight: 700; letter-spacing: -2px;
       margin-bottom: 28px;
-      animation: fadeUp 0.8s 0.1s ease both;
     }
-    .hero h1 .accent {
-      background: linear-gradient(135deg, var(--coral), var(--peach));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .accent {
+      background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .hero-sub {
-      font-size: clamp(17px, 2.2vw, 21px);
-      color: var(--text-muted);
-      max-width: 560px;
-      margin: 0 auto 48px;
-      line-height: 1.7;
-      font-weight: 300;
-      animation: fadeUp 0.8s 0.2s ease both;
+    .accent-cool {
+      background: var(--gradient-cool); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .accent-warm {
+      background: var(--gradient-warm); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
+    .hero-sub {
+      font-size: 19px; color: var(--text-secondary);
+      max-width: 580px; margin: 0 auto 40px; font-weight: 300; line-height: 1.7;
     }
+
+    .hero-platforms {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .hero-platforms svg { opacity: 0.5; transition: opacity 0.3s; }
+    .hero-platforms svg:hover { opacity: 1; }
 
     /* ===== WAITLIST FORM ===== */
     .waitlist-form {
-      display: flex; gap: 12px;
-      max-width: 600px; margin: 0 auto;
-      animation: fadeUp 0.8s 0.3s ease both;
+      display: flex; gap: 10px; max-width: 520px; margin: 0 auto;
+      flex-wrap: wrap; justify-content: center;
     }
-    .waitlist-form input {
-      flex: 1;
-      min-width: 0;
-      padding: 16px 22px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px;
-      background: var(--bg-elevated);
-      border: 1px solid #2A2A38;
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      outline: none;
+    .waitlist-form input[type="text"] {
+      flex: 0 1 140px; padding: 14px 18px;
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: 'Outfit', sans-serif; font-size: 15px;
       transition: border-color 0.3s;
     }
-    .waitlist-form input[type="text"] { flex: 0.7; }
-    .waitlist-form input[type="email"] { flex: 1; }
+    .waitlist-form input[type="email"] {
+      flex: 1 1 220px; padding: 14px 18px;
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: 'Outfit', sans-serif; font-size: 15px;
+      transition: border-color 0.3s;
+    }
+    .waitlist-form input:focus { outline: none; border-color: var(--coral); box-shadow: 0 0 0 3px rgba(255,107,107,0.15); }
     .waitlist-form input::placeholder { color: var(--text-muted); }
-    .waitlist-form input:focus { border-color: var(--coral); }
     .waitlist-form button {
-      padding: 16px 32px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px; font-weight: 600;
-      background: linear-gradient(135deg, var(--coral), #FF8A65);
-      color: white;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      position: relative;
-      overflow: hidden;
+      padding: 14px 32px; background: var(--coral);
+      border: none; border-radius: var(--radius-sm); color: white;
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: all 0.3s; white-space: nowrap;
     }
-    .waitlist-form button:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--coral-glow); }
-    .waitlist-form button:active { transform: translateY(0); }
-    .waitlist-form button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-
-    .form-message {
-      text-align: center;
-      margin-top: 16px;
-      font-size: 14px;
-      min-height: 24px;
-      animation: fadeUp 0.4s ease both;
-    }
+    .waitlist-form button:hover { background: #ff8585; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(255,107,107,0.3); }
+    .waitlist-form button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .form-message { text-align: center; font-size: 14px; margin-top: 12px; min-height: 20px; }
     .form-message.success { color: var(--mint); }
-    .form-message.error { color: var(--coral); }
+    .form-message.error { color: #F87171; }
 
-    /* ===== SOCIAL PROOF ===== */
     .social-proof {
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      margin-top: 40px;
-      font-size: 14px; color: var(--text-muted);
-      animation: fadeUp 0.8s 0.4s ease both;
-    }
-    .avatar-stack {
-      display: flex;
-    }
-    .avatar-stack span {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 2px solid var(--bg);
-      margin-left: -8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
+      gap: 12px; margin-top: 32px; font-size: 13px; color: var(--text-muted);
     }
-    .avatar-stack span:first-child { margin-left: 0; }
-    .avatar-stack span:nth-child(1) { background: #FF6B6B30; }
-    .avatar-stack span:nth-child(2) { background: #B8A9FF30; }
-    .avatar-stack span:nth-child(3) { background: #7EDCB530; }
 
-    /* ===== PAIN STATEMENT ===== */
-    .pain-statement {
-      padding: 80px 0;
-      text-align: center;
-      border-top: 1px solid #1A1A25;
-      border-bottom: 1px solid #1A1A25;
+    /* ===== PAIN POINT ===== */
+    .pain-section {
+      position: relative; z-index: 1;
+      padding: 60px 0; text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .pain-line {
+    .pain-quote {
       font-family: 'Fraunces', serif;
-      font-size: clamp(22px, 3.5vw, 34px);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--text-muted);
+      font-size: clamp(20px, 3vw, 28px); font-style: italic; font-weight: 300;
+      color: var(--text-secondary); max-width: 700px; margin: 0 auto 20px;
       line-height: 1.5;
-      margin-bottom: 28px;
     }
     .pain-answer {
-      font-size: clamp(16px, 2vw, 19px);
-      color: var(--text);
-      max-width: 540px;
-      margin: 0 auto;
+      font-size: 16px; color: var(--text-muted); max-width: 560px; margin: 0 auto;
       line-height: 1.8;
-      font-weight: 400;
     }
 
-    /* ===== HOW IT WORKS ===== */
-    .how-section {
-      padding: 80px 0;
+    /* ===== TWO-MODE SECTION ===== */
+    .modes-section {
+      position: relative; z-index: 1; padding: 100px 0;
     }
     .section-label {
-      font-size: 13px; font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--coral);
-      margin-bottom: 16px;
+      font-size: 12px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--coral); margin-bottom: 16px;
+      text-align: center;
     }
     .section-title {
       font-family: 'Fraunces', serif;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 60px;
+      font-size: clamp(28px, 4vw, 44px);
+      text-align: center; margin-bottom: 16px; line-height: 1.15;
     }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+    .section-sub {
+      font-size: 17px; color: var(--text-secondary); text-align: center;
+      max-width: 600px; margin: 0 auto 60px; font-weight: 300;
     }
-    .step {
-      background: var(--bg-card);
-      border: 1px solid #1E1E2A;
-      border-radius: var(--radius);
-      padding: 40px 32px;
-      position: relative;
-      transition: all 0.4s ease;
+    .modes-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
     }
-    .step:hover {
-      border-color: #2A2A3A;
-      transform: translateY(-4px);
+    .mode-card {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius); padding: 40px 36px;
+      transition: all 0.4s ease; position: relative; overflow: hidden;
     }
-    .step-number {
+    .mode-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .mode-card.private::before { background: var(--gradient-main); }
+    .mode-card.social::before { background: var(--gradient-cool); }
+    .mode-card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .mode-tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px;
+      border-radius: 100px; margin-bottom: 20px;
+    }
+    .mode-card.private .mode-tag { background: rgba(255,107,107,0.15); color: var(--coral); }
+    .mode-card.social .mode-tag { background: rgba(126,220,181,0.15); color: var(--mint); }
+    .mode-card h3 {
       font-family: 'Fraunces', serif;
-      font-size: 48px; font-weight: 700;
-      line-height: 1;
-      margin-bottom: 20px;
+      font-size: 26px; margin-bottom: 14px; font-weight: 700;
     }
-    .step:nth-child(1) .step-number { color: var(--coral); }
-    .step:nth-child(2) .step-number { color: var(--lavender); }
-    .step:nth-child(3) .step-number { color: var(--mint); }
-    .step h3 {
-      font-size: 20px; font-weight: 600;
-      margin-bottom: 12px;
+    .mode-card p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+    .mode-features {
+      list-style: none; display: flex; flex-direction: column; gap: 10px;
     }
-    .step p {
-      font-size: 15px; color: var(--text-muted);
-      line-height: 1.7;
+    .mode-features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text-secondary);
+    }
+    .mode-features li span { font-size: 16px; flex-shrink: 0; line-height: 1.4; }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-section {
+      position: relative; z-index: 1;
+      padding: 80px 0 100px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .step {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius); padding: 32px 24px; text-align: center;
+      transition: all 0.3s;
+    }
+    .step:hover { border-color: var(--border-glow); }
+    .step-num {
+      font-family: 'Fraunces', serif;
+      font-size: 36px; font-weight: 700; margin-bottom: 8px;
+    }
+    .step-num.warm { background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .step-num.cool { background: var(--gradient-cool); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .step h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .step p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ===== COLLABORATIVE COLLECTIONS ===== */
+    .collab-section {
+      position: relative; z-index: 1;
+      padding: 80px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .collab-inner {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius); padding: 60px 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+      align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .collab-inner::before {
+      content: ''; position: absolute; top: -50%; right: -20%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255,171,145,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .collab-content h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 3vw, 38px); font-weight: 700; margin-bottom: 16px; line-height: 1.15;
+    }
+    .collab-content p { color: var(--text-secondary); font-size: 16px; line-height: 1.7; margin-bottom: 24px; }
+    .collab-usecases {
+      list-style: none; display: flex; flex-direction: column; gap: 14px;
+    }
+    .collab-usecases li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 15px; color: var(--text-secondary);
+    }
+    .collab-usecases li span { font-size: 20px; flex-shrink: 0; }
+    .collab-visual {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .collab-card {
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); padding: 16px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .collab-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .collab-avatar.a1 { background: rgba(255,107,107,0.2); }
+    .collab-avatar.a2 { background: rgba(126,220,181,0.2); }
+    .collab-avatar.a3 { background: rgba(184,169,255,0.2); }
+    .collab-card-text { font-size: 13px; }
+    .collab-card-text strong { display: block; font-size: 14px; color: var(--text); }
+    .collab-card-text span { color: var(--text-muted); }
+    .collab-card-icon { flex-shrink: 0; opacity: 0.7; }
+    .collab-badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      background: rgba(255,171,145,0.15); color: var(--peach);
+      padding: 3px 10px; border-radius: 100px; margin-left: auto;
     }
 
     /* ===== PLATFORMS ===== */
     .platforms-section {
-      padding: 60px 0 80px;
-      text-align: center;
+      position: relative; z-index: 1;
+      padding: 60px 0;
+      border-top: 1px solid var(--border-subtle);
     }
     .platform-grid {
-      display: flex; justify-content: center; gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 40px;
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 16px; margin-top: 40px;
     }
     .platform-chip {
       display: flex; align-items: center; gap: 10px;
-      background: var(--bg-card);
-      border: 1px solid #1E1E2A;
-      border-radius: 100px;
-      padding: 14px 28px;
-      font-size: 15px; font-weight: 500;
-      transition: all 0.3s ease;
+      background: var(--bg-card); border: 1px solid rgba(255,107,107,0.2);
+      border-radius: 100px; padding: 12px 24px; font-size: 15px; font-weight: 500;
+      transition: all 0.3s;
     }
-    .platform-chip:hover { border-color: #3A3A4A; transform: translateY(-2px); }
-    .platform-chip svg { width: 22px; height: 22px; }
-    .platform-chip.coming { opacity: 0.45; }
-    .platform-chip.coming::after {
-      content: 'Soon';
-      font-size: 11px; font-weight: 600;
-      background: var(--bg-elevated);
-      color: var(--text-muted);
-      padding: 2px 8px;
-      border-radius: 100px;
-      margin-left: 4px;
-    }
-
-    /* ===== FEATURES ===== */
-    .features-section {
-      padding: 80px 0;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid #1E1E2A;
-      border-radius: var(--radius);
-      padding: 36px;
-      transition: all 0.4s ease;
-    }
-    .feature-card:hover { border-color: #2A2A3A; }
-    .feature-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-    .feature-card:nth-child(1) .feature-icon { background: #FF6B6B18; }
-    .feature-card:nth-child(2) .feature-icon { background: #B8A9FF18; }
-    .feature-card:nth-child(3) .feature-icon { background: #7EDCB518; }
-    .feature-card:nth-child(4) .feature-icon { background: #FFAB9118; }
-    .feature-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-    .feature-card p { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+    .platform-chip:hover { border-color: var(--coral); transform: translateY(-2px); }
+    .platform-chip svg { width: 20px; height: 20px; flex-shrink: 0; }
 
     /* ===== BOTTOM CTA ===== */
     .bottom-cta {
-      padding: 100px 0;
-      text-align: center;
+      position: relative; z-index: 1;
+      padding: 100px 0 60px; text-align: center;
+      border-top: 1px solid var(--border-subtle);
     }
     .bottom-cta h2 {
       font-family: 'Fraunces', serif;
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 20px;
+      font-size: clamp(30px, 5vw, 50px); font-weight: 700;
+      margin-bottom: 16px; line-height: 1.1;
     }
-    .bottom-cta p {
-      font-size: 17px; color: var(--text-muted);
-      margin-bottom: 40px;
-      font-weight: 300;
+    .bottom-cta > p {
+      font-size: 17px; color: var(--text-secondary);
+      margin-bottom: 40px; font-weight: 300;
     }
 
     /* ===== FOOTER ===== */
     footer {
       padding: 40px 0;
-      border-top: 1px solid #1A1A25;
+      border-top: 1px solid var(--border-subtle);
       display: flex; align-items: center; justify-content: space-between;
     }
     .footer-logo {
-      font-family: 'Fraunces', serif;
-      font-weight: 700; font-size: 20px;
+      font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px;
       color: var(--text-muted);
     }
     footer small { color: var(--text-muted); font-size: 13px; }
 
     /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .hero { padding: 60px 0 60px; }
+    @media (max-width: 900px) {
+      .modes-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .collab-inner { grid-template-columns: 1fr; padding: 40px 28px; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 50px 0 40px; }
       .steps { grid-template-columns: 1fr; }
-      .features-grid { grid-template-columns: 1fr; }
       .waitlist-form { flex-direction: column; }
+      .waitlist-form input[type="text"], .waitlist-form input[type="email"] { flex: 1 1 auto; }
       .waitlist-form button { width: 100%; }
       footer { flex-direction: column; gap: 16px; text-align: center; }
-      .platform-grid { gap: 12px; }
+      .collab-visual { display: none; }
     }
 
     /* ===== SCROLL REVEAL ===== */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ===== GRAIN OVERLAY ===== */
-    body::after {
-      content: '';
-      position: fixed; inset: 0;
-      z-index: 9999; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      opacity: 0.025;
-    }
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
   </style>
 </head>
 <body>
@@ -447,15 +429,29 @@
         <span class="dot"></span>
         Coming to iOS
       </div>
-      <h1>Save it now.<br><span class="accent">Find it later.</span></h1>
+      <h1>Curate what you love.<br><span class="accent">Discover what your people save.</span></h1>
       <p class="hero-sub">
-        One tap to save content from Instagram, YouTube, TikTok, Facebook & X.
-        AI-powered search to find it instantly.
+        Save content from any platform in one tap. Build collections that reflect your taste.
+        See what the best curators are finding across Instagram, TikTok, YouTube, X & Facebook.
       </p>
+
+      <!-- Platform logos row -->
+      <div class="hero-platforms">
+        <!-- Instagram -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig" x1="0" y1="24" x2="24" y2="0"><stop offset="0%" stop-color="#F58529"/><stop offset="50%" stop-color="#DD2A7B"/><stop offset="100%" stop-color="#8134AF"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig)" stroke-width="2"/><circle cx="18" cy="6" r="1.5" fill="#DD2A7B"/></svg>
+        <!-- TikTok -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12.525.02c1.31-.02 2.61.01 3.91.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" fill="#69C9D0"/></svg>
+        <!-- YouTube -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 4-8 4z" fill="#FF0000"/></svg>
+        <!-- X -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#F0EDE8"/></svg>
+        <!-- Facebook -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/></svg>
+      </div>
 
       <div id="waitlist">
         <form class="waitlist-form" id="waitlistForm">
-          <input type="text" id="nameInput" placeholder="Your name (optional)" autocomplete="given-name">
+          <input type="text" id="nameInput" placeholder="Name" autocomplete="name">
           <input type="email" id="emailInput" placeholder="Enter your email" required autocomplete="email">
           <button type="submit" id="submitBtn">Join Waitlist</button>
         </form>
@@ -463,51 +459,155 @@
       </div>
 
       <div class="social-proof">
-        <div class="avatar-stack">
-          <span>🎬</span>
-          <span>📸</span>
-          <span>🎵</span>
-        </div>
         <span>Join early adopters getting first access</span>
       </div>
     </section>
 
-    <!-- PAIN POINT STATEMENT -->
-    <section class="pain-statement reveal">
-      <div class="pain-line">"I saw it somewhere…<br>was it Instagram? TikTok? YouTube?"</div>
-      <div class="pain-answer">Sound familiar? You save content everywhere and find it nowhere.<br>Dopo puts everything in one place — and actually helps you find it again.</div>
+    <!-- PAIN POINT -->
+    <section class="pain-section reveal">
+      <p class="pain-quote">
+        "I saw it somewhere&hellip; was it Instagram? TikTok? YouTube?<br>
+        Someone sent it to me&hellip; or did I save it?"
+      </p>
+      <p class="pain-answer">
+        You save content everywhere and find it nowhere. Your best discoveries are buried
+        across five apps and nobody else benefits from your great taste.
+        <strong style="color: var(--text);">Dopo changes that.</strong>
+      </p>
+    </section>
+
+    <!-- TWO MODES -->
+    <section class="modes-section reveal">
+      <div class="section-label">Two Modes, One Platform</div>
+      <div class="section-title">Your private library.<br>Your <span class="accent">public taste.</span></div>
+      <p class="section-sub">
+        Every collection starts private. Share the ones that show off your best finds.
+        Keep the rest for your eyes only.
+      </p>
+
+      <div class="modes-grid">
+        <div class="mode-card private reveal reveal-delay-1">
+          <div class="mode-tag">Private</div>
+          <h3>Your Personal Library</h3>
+          <p>Save anything from any platform. AI auto-tags and organizes so you don't have to. Search like you think.</p>
+          <ul class="mode-features">
+            <li><span>⚡</span> One-tap save via Share Sheet</li>
+            <li><span>🤖</span> AI auto-categorization &amp; smart tags</li>
+            <li><span>🔍</span> Natural language search &mdash; "that pasta recipe from the Italian guy"</li>
+            <li><span>🔒</span> Private by default, always</li>
+          </ul>
+        </div>
+
+        <div class="mode-card social reveal reveal-delay-2">
+          <div class="mode-tag">Social</div>
+          <h3>Share Your Taste</h3>
+          <p>Make any collection public. Build a following around your best finds. Discover content through people, not algorithms.</p>
+          <ul class="mode-features">
+            <li><span>🌍</span> One-tap to make any collection public</li>
+            <li><span>👥</span> Follow curators whose taste you trust</li>
+            <li><span>🔥</span> Discover trending collections &amp; top curators</li>
+            <li><span>✨</span> Build your reputation as a tastemaker</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- HOW IT WORKS -->
     <section class="how-section reveal">
       <div class="section-label">How it works</div>
-      <div class="section-title">Three steps. Zero friction.</div>
+      <div class="section-title">Four steps. Zero effort.</div>
+      <p class="section-sub">
+        From scrolling to curating to discovering &mdash; without leaving your flow.
+      </p>
+
       <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>See something you love</h3>
-          <p>Scrolling Instagram, watching YouTube, browsing TikTok — you find content worth keeping.</p>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num warm">1</div>
+          <h3>Save</h3>
+          <p>See something great? Tap Share &rarr; Dopo. Saved in under 2 seconds, from any app.</p>
         </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Tap Share → Dopo</h3>
-          <p>Hit the share button, tap Dopo. Done in under 2 seconds. AI automatically tags and organizes it.</p>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num warm">2</div>
+          <h3>Auto-Organize</h3>
+          <p>AI reads the content, generates tags, and drops it into the right collection. You do nothing.</p>
         </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Search & find instantly</h3>
-          <p>"That pasta recipe from last week" — just type what you remember. AI finds it for you.</p>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num cool">3</div>
+          <h3>Curate &amp; Share</h3>
+          <p>Build themed collections. Make the best ones public. Your friends, followers, and strangers find your taste.</p>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-num cool">4</div>
+          <h3>Discover</h3>
+          <p>Browse what the best curators are saving. Content filtered by human taste, not engagement algorithms.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLABORATIVE COLLECTIONS -->
+    <section class="collab-section reveal">
+      <div class="collab-inner">
+        <div class="collab-content">
+          <div class="section-label" style="text-align:left;">Coming Soon</div>
+          <h2>Collections you build <span class="accent-warm">together.</span></h2>
+          <p>
+            Invite friends, family, or your team to curate a shared collection.
+            Everyone adds from their own feeds. One collection captures it all.
+          </p>
+          <ul class="collab-usecases">
+            <li><span>✈️</span> Plan a trip together &mdash; save restaurants, stays, and must-sees from everyone's feeds</li>
+            <li><span>🏠</span> Renovating? Build a shared board of inspo with your partner</li>
+            <li><span>🏋️</span> Your gym crew sharing workout content in one place</li>
+            <li><span>🍳</span> Family recipe collection that anyone can add to</li>
+          </ul>
+        </div>
+        <div class="collab-visual">
+          <div class="collab-card">
+            <div class="collab-avatar a1">👩</div>
+            <div class="collab-card-text">
+              <strong>Sarah added a reel</strong>
+              <span>Tokyo Eats</span>
+            </div>
+            <div class="collab-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig2" x1="0" y1="24" x2="24" y2="0"><stop offset="0%" stop-color="#F58529"/><stop offset="50%" stop-color="#DD2A7B"/><stop offset="100%" stop-color="#8134AF"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig2)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig2)" stroke-width="2"/></svg>
+            </div>
+          </div>
+          <div class="collab-card">
+            <div class="collab-avatar a2">👨</div>
+            <div class="collab-card-text">
+              <strong>Mike added a video</strong>
+              <span>Tokyo Eats</span>
+            </div>
+            <div class="collab-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 4-8 4z" fill="#FF0000"/></svg>
+            </div>
+          </div>
+          <div class="collab-card">
+            <div class="collab-avatar a3">👧</div>
+            <div class="collab-card-text">
+              <strong>Priya added a TikTok</strong>
+              <span>Tokyo Eats</span>
+            </div>
+            <div class="collab-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12.525.02c1.31-.02 2.61.01 3.91.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" fill="#69C9D0"/></svg>
+            </div>
+            <div class="collab-badge">New</div>
+          </div>
+          <div style="text-align:center; margin-top: 8px;">
+            <span style="font-size: 13px; color: var(--text-muted);">3 curators &bull; 47 saves &bull; 12 followers</span>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- PLATFORMS -->
     <section class="platforms-section reveal">
-      <div class="section-label">Works with</div>
-      <div class="section-title">Your favorite platforms, unified.</div>
+      <div class="section-label">Works With</div>
+      <div class="section-title">All your platforms.<br><span class="accent">One library.</span></div>
+
       <div class="platform-grid">
         <div class="platform-chip">
-          <svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F58529"/><stop offset="50%" stop-color="#DD2A7B"/><stop offset="100%" stop-color="#8134AF"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig)" stroke-width="2"/><circle cx="18" cy="6" r="1.5" fill="#DD2A7B"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig3" x1="0" y1="24" x2="24" y2="0"><stop offset="0%" stop-color="#F58529"/><stop offset="50%" stop-color="#DD2A7B"/><stop offset="100%" stop-color="#8134AF"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig3)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig3)" stroke-width="2"/><circle cx="18" cy="6" r="1.5" fill="#DD2A7B"/></svg>
           Instagram
         </div>
         <div class="platform-chip">
@@ -519,50 +619,22 @@
           TikTok
         </div>
         <div class="platform-chip">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/></svg>
-          Facebook
-        </div>
-        <div class="platform-chip">
           <svg viewBox="0 0 24 24" fill="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#F0EDE8"/></svg>
           X
         </div>
-      </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="features-section reveal">
-      <div class="section-label">Why Dopo</div>
-      <div class="section-title">Not another bookmarking app.</div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🧠</div>
-          <h3>AI-Powered Metadata</h3>
-          <p>Every save is automatically tagged with title, creator, description, and smart tags. You save the link — AI does the rest.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔍</div>
-          <h3>Natural Language Search</h3>
-          <p>Search the way you think. "That workout video from the guy with the beard" actually works.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>2-Second Save</h3>
-          <p>Share sheet integration means saving is faster than switching apps. Tap share, tap Dopo, done.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🏠</div>
-          <h3>One Library, Every Platform</h3>
-          <p>No more digging through Instagram saved, YouTube Watch Later, TikTok favorites, and X bookmarks separately.</p>
+        <div class="platform-chip">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/></svg>
+          Facebook
         </div>
       </div>
     </section>
 
     <!-- BOTTOM CTA -->
     <section class="bottom-cta reveal">
-      <h2>Stop losing content<br>you'll want <span class="accent">later.</span></h2>
-      <p>Dopo is launching soon on iOS. Get early access.</p>
+      <h2>Stop saving into the void.<br>Start curating with <span class="accent">taste.</span></h2>
+      <p>Dopo is launching soon on iOS. Get early access and help shape the product.</p>
       <form class="waitlist-form" id="waitlistForm2">
-        <input type="text" id="nameInput2" placeholder="Your name (optional)" autocomplete="given-name">
+        <input type="text" id="nameInput2" placeholder="Name" autocomplete="name">
         <input type="email" id="emailInput2" placeholder="Enter your email" required autocomplete="email">
         <button type="submit" id="submitBtn2">Join Waitlist</button>
       </form>
@@ -641,9 +713,7 @@
     // ===== SCROLL REVEAL =====
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); }
       });
     }, { threshold: 0.1 });
 
